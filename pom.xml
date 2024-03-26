@@ -55,6 +55,35 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- log & crash require dependency -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20171018</version>
+		</dependency>
+
+		<!-- logback -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5</version>
+		</dependency>
+		<!-- log & crash -->
+		<dependency>
+			<groupId>nhn.logncrash</groupId>
+			<artifactId>toast-logncrash-logback-sdk</artifactId>
+			<version>3.0.5</version>
+			<scope>system</scope>
+			<systemPath>
+				${project.basedir}/src/main/resources/libs/toast-logncrash-logback-sdk-3.0.5.jar
+			</systemPath>
+		</dependency>
+
 	</dependencies>
 
 	<build>
