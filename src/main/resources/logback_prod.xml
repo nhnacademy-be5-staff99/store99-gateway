@@ -10,7 +10,7 @@
     <appender name="LNCS-APPENDER" class="ch.qos.logback.classic.AsyncAppender">
         <!-- Logback의 AsyncAppender 옵션 -->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ERROR</level>
+            <level>INFO</level>
         </filter>
         <includeCallerData value="false"/>
         <queueSize value="2048"/>
@@ -26,7 +26,7 @@
         </encoder>
     </appender>
 
-    <root level="ERROR">
+    <root level="INFO">
         <appender-ref ref="LNCS-APPENDER"/>
         <appender-ref ref="CONSOLE"/>
     </root>
