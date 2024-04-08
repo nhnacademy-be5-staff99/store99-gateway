@@ -33,6 +33,9 @@ public class RouteLocatorConfig {
                 .route("open-coupon", r -> r.path("/open/coupon/**")
                         .filters(f -> f.rewritePath("open/coupon/(?<segment>.*)", "/${segment}"))
                         .uri("lb://STORE99-COUPON-SERVICE"))
+                .route("auth", r -> r.path("/auth/**")
+                        .filters(f -> f.rewritePath("auth/(?<segment>.*)", "/${segment}"))
+                        .uri("lb://STORE99-AUTH-SERVICE"))
                 .build();
     }
 }
