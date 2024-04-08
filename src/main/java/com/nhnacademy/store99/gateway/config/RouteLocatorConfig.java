@@ -7,6 +7,11 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * 라우트 로케이터 설정
+ *
+ * @author seunggyu-kim
+ */
 @RequiredArgsConstructor
 @Configuration
 public class RouteLocatorConfig {

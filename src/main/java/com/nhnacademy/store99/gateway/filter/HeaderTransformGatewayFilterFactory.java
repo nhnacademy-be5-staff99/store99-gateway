@@ -7,6 +7,12 @@ import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFac
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 
+/**
+ * 헤더 변환 게이트웨이 필터 팩토리
+ * <p>요청 헤더를 변환하는 게이트웨이 필터 팩토리. 인증 개발 전 임시로 사용
+ *
+ * @author seunggyu-kim
+ */
 @Component
 public class HeaderTransformGatewayFilterFactory extends
         AbstractGatewayFilterFactory<HeaderTransformGatewayFilterFactory.Config> {
