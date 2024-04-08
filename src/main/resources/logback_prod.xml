@@ -3,7 +3,7 @@
     <appender name="logNCrashHttp" class="com.toast.java.logncrash.logback.LogNCrashHttpAppender">
         <param name="appKey" value="${LOG_N_CRASH_APP_KEY}"/>
         <param name="logSource" value="${spring.profiles.active}"/>
-        <param name="category" value="store99-gateway:8080" />
+        <param name="category" value="store99-gateway:8080"/>
     </appender>
 
     <!-- LogNCrashHttpAppender를 포함한 AsyncAppender 선언 -->
@@ -19,7 +19,7 @@
         <appender-ref ref="logNCrashHttp"/>
     </appender>
 
-    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %clr(%-5level) %cyan(%logger) - %msg%n</pattern>
