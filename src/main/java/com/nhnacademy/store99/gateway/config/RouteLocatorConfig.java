@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * 라우트 로케이터 설정
  *
  * @author seunggyu-kim
+ * @author Ahyeon Song
  */
 @RequiredArgsConstructor
 @Configuration
