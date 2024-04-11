@@ -3,8 +3,7 @@ package com.nhnacademy.store99.gateway.util;
 import com.nhnacademy.store99.gateway.property.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -53,7 +52,7 @@ public class JwtUtil {
         return Jwts.parserBuilder()
                 .setSigningKey(key())
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
     }
 
@@ -68,7 +67,7 @@ public class JwtUtil {
         return Jwts.parserBuilder()
                 .setSigningKey(key())
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody()
                 .get("UUID", String.class);
     }
@@ -85,7 +84,7 @@ public class JwtUtil {
         return Jwts.parserBuilder()
                 .setSigningKey(key())
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody()
                 .getExpiration();
     }
@@ -100,11 +99,11 @@ public class JwtUtil {
     public boolean isValidToken(String token) {
         token = removeBearerPrefix(token);
         try {
-            Jwt<Header, Claims> claimsJwt = Jwts.parserBuilder()
+            Jws<Claims> claimsJws = Jwts.parserBuilder()
                     .setSigningKey(key())
                     .build()
-                    .parseClaimsJwt(token);
-            return claimsJwt.getBody().getExpiration().before(new Date());
+                    .parseClaimsJws(token);
+            return claimsJws.getBody().getExpiration().after(new Date());
 
         } catch (SignatureException | MalformedJwtException e) {
             throw new SignatureException("올바르지 않은 서명", e);

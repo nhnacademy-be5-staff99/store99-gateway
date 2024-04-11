@@ -3,6 +3,7 @@ package com.nhnacademy.store99.gateway.filter;
 import com.nhnacademy.store99.gateway.util.JwtUtil;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -19,6 +20,7 @@ import reactor.core.publisher.Mono;
  * @author Ahyeon Song
  */
 @Component
+@Slf4j
 public class AuthorizationFilter extends AbstractGatewayFilterFactory<AuthorizationFilter.Config> {
 
     public AuthorizationFilter() {
@@ -33,12 +35,12 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
      * @return userId
      */
     private static String getUserId(Config config, String uuid) {
-        String userId = (String) config.redisTemplate.opsForValue().get(uuid);
+        Object userId = config.redisTemplate.opsForValue().get(uuid);
 
         if (Objects.isNull(userId)) {
             return null;
         }
-        return userId;
+        return Integer.toString((Integer) userId);
     }
 
     /**
@@ -78,6 +80,7 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
 
             // X-USER-TOKEN 이라는 이름의 Cookie 가 존재하는 지 확인
             if (Objects.isNull(tokenCookie)) {
+                log.debug("X-USER-TOKEN Cookie 없음");
                 return handleUnAuthorize(exchange);
             }
 
@@ -87,6 +90,7 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
             boolean isValid = config.jwtUtil.isValidToken(token);
 
             if (!isValid) {
+                log.debug("토큰 만료");
                 return handleUnAuthorize(exchange);
             }
 
@@ -97,6 +101,7 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
             String userId = getUserId(config, uuid);
 
             if (Objects.isNull(userId)) {
+                log.debug("userId 가 존재하지 않음");
                 return handleUnAuthorize(exchange);
             }
 
