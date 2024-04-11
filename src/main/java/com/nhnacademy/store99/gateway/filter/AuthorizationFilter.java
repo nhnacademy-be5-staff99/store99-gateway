@@ -86,6 +86,12 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
 
             String token = tokenCookie.getValue();
 
+            // 토큰이 비어 있는 지 확인
+            if (Objects.isNull(token) || token.isEmpty()) {
+                log.debug("토큰이 비어있음");
+                return handleUnAuthorize(exchange);
+            }
+
             // 사용 기간이 만료 되었는 지 확인
             boolean isValid = config.jwtUtil.isValidToken(token);
 
