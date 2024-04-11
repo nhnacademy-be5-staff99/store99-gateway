@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 public class JwtUtil {
 
     public static final String ACCESS_TOKEN = "access-token";
-    public static final long ACCESS_TOKEN_EXPIRED_TIME = Duration.ofHours(1).toMillis();
+    public static final long ACCESS_TOKEN_EXPIRED_TIME = Duration.ofDays(30).toMillis();
     private static final String BEARER_PREFIX = "Bearer";
     private final String secretKey;
 
