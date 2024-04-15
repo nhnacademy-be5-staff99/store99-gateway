@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -71,29 +70,27 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
      */
     @Override
     public GatewayFilter apply(Config config) {
-        return (((exchange, chain) -> {
+        return ((exchange, chain) -> {
 
-            HttpCookie tokenCookie = exchange
+            String xUserToken = exchange
                     .getRequest()
-                    .getCookies()
+                    .getHeaders()
                     .getFirst("X-USER-TOKEN");
 
-            // X-USER-TOKEN 이라는 이름의 Cookie 가 존재하는 지 확인
-            if (Objects.isNull(tokenCookie)) {
-                log.debug("X-USER-TOKEN Cookie 없음");
+            // X-USER-TOKEN 이라는 이름의 header 가 존재하는 지 확인
+            if (Objects.isNull(xUserToken)) {
+                log.debug("X-USER-TOKEN header 없음");
                 return handleUnAuthorize(exchange);
             }
 
-            String token = tokenCookie.getValue();
-
             // 토큰이 비어 있는 지 확인
-            if (Objects.isNull(token) || token.isEmpty()) {
+            if (xUserToken.isEmpty()) {
                 log.debug("토큰이 비어있음");
                 return handleUnAuthorize(exchange);
             }
 
             // 사용 기간이 만료 되었는 지 확인
-            boolean isValid = config.jwtUtil.isValidToken(token);
+            boolean isValid = config.jwtUtil.isValidToken(xUserToken);
 
             if (!isValid) {
                 log.debug("토큰 만료");
@@ -101,7 +98,7 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
             }
 
             // uuid 를 parsing
-            String uuid = config.jwtUtil.getUUID(token);
+            String uuid = config.jwtUtil.getUUID(xUserToken);
 
             // Redis 에서 UUID 로 userId 조회
             String userId = getUserId(config, uuid);
@@ -115,7 +112,7 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
             setAuthorizationHeader(exchange, userId);
 
             return chain.filter(exchange);
-        }));
+        });
     }
 
     /**
