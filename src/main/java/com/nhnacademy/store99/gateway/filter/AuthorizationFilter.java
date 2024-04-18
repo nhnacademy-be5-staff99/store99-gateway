@@ -78,7 +78,7 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
                     .getFirst("X-USER-TOKEN");
 
             // X-USER-TOKEN 이라는 이름의 header 가 존재하는 지 확인
-            if (Objects.isNull(xUserToken)) {
+            if (xUserToken == null) {
                 log.debug("X-USER-TOKEN header 없음");
                 return handleUnAuthorize(exchange);
             }
