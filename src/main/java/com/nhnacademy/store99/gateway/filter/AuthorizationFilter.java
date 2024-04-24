@@ -80,13 +80,13 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
             // X-USER-TOKEN 이라는 이름의 header 가 존재하는 지 확인
             if (xUserToken == null) {
                 log.debug("X-USER-TOKEN header 없음");
-                return handleUnAuthorize(exchange);
+                return handleBadRequest(exchange);
             }
 
             // 토큰이 비어 있는 지 확인
             if (xUserToken.isEmpty()) {
                 log.debug("토큰이 비어있음");
-                return handleUnAuthorize(exchange);
+                return handleBadRequest(exchange);
             }
 
             // 사용 기간이 만료 되었는 지 확인
@@ -117,12 +117,30 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
 
     /**
      * 인증 실패 시 401 에러 처리
+     * <p>1. Jwt Token parsing 실패
+     * <p>2. Jwt Token 만료
+     * <p>3. userId 가 Redis 에 존재하지 않음
      *
      * @return 401_UNAUTHORIZED
      */
     private Mono<Void> handleUnAuthorize(ServerWebExchange exchange) {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
+
+        return response.setComplete();
+    }
+
+    /**
+     * Header 가 없거나 빈 값일 경우 400 에러 처리
+     *
+     * <p>X-USER-TOKEN header 없음
+     * <p>토큰이 비어있음
+     *
+     * @return 400_BAD_REQUEST
+     */
+    private Mono<Void> handleBadRequest(ServerWebExchange exchange) {
+        ServerHttpResponse response = exchange.getResponse();
+        response.setStatusCode(HttpStatus.BAD_REQUEST);
 
         return response.setComplete();
     }

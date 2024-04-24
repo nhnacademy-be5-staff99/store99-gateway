@@ -4,7 +4,6 @@ import com.nhnacademy.store99.gateway.property.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.io.Decoders;
@@ -105,10 +104,8 @@ public class JwtUtil {
                     .parseClaimsJws(token);
             return claimsJws.getBody().getExpiration().after(new Date());
 
-        } catch (SignatureException | MalformedJwtException e) {
-            throw new SignatureException("올바르지 않은 서명", e);
-        } catch (ExpiredJwtException e) {
-            throw new JwtException("사용 기간이 만료된 토큰", e);
+        } catch (SignatureException | MalformedJwtException | ExpiredJwtException e) {
+            return false;
         }
     }
 
